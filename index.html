@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Mensual de Finanzas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 Control Mensual de Finanzas</h1>
+
+      <!-- Panel de Totales -->
+      <section class="panel" id="panel-totales">
+        <div class="card">
+          <h3>Total Ingresos</h3>
+          <p id="total-ingresos">$0</p>
+        </div>
+        <div class="card">
+          <h3>Total Egresos</h3>
+          <p id="total-egresos">$0</p>
+        </div>
+        <div class="card">
+          <h3>Diezmo</h3>
+          <p id="total-diezmo">$0</p>
+        </div>
+        <div class="card">
+          <h3>Saldo Actual</h3>
+          <p id="saldo-actual">$0</p>
+        </div>
+        <div class="card">
+          <h3>Diferencia Mes Anterior</h3>
+          <p id="diferencia-mes">$0</p>
+        </div>
+      </section>
+
+      <!-- Tabla Ingresos -->
+      <section class="tabla-container">
+        <h2>Ingresos</h2>
+        <table>
+          <tbody>
+            <tr>
+              
+              <td data-label="Descripción">
+                <input
+                  type="text"
+                  placeholder="Ej: Sueldo"
+                  class="ingresoDescripcion"
+                />
+              </td>
+              <td data-label="Importe">
+                <input type="number" placeholder="0" class="ingresoImportes" />
+              </td>
+              <td data-label="Acciones" class="acciones">
+                <button class="btn btn-guardar">Guardar</button>
+                <button class="btn btn-editar">Editar</button>
+                <button class="btn btn-borrar">Borrar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Tabla Egresos -->
+      <section class="tabla-container">
+        <h2>Egresos</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td data-label="Fecha"><input type="date" /></td>
+              <td data-label="Descripción">
+                <input
+                  type="text"
+                  placeholder="Ej: Supermercado"
+                  id="egresoDescripcion"
+                />
+              </td>
+              <td data-label="Importe">
+                <input type="number" placeholder="0" id="egresoImporte" />
+              </td>
+              <td data-label="Acciones" class="acciones">
+                <button class="btn btn-guardar">Guardar</button>
+                <button class="btn btn-editar">Editar</button>
+                <button class="btn btn-borrar">Borrar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="tabla-container">
+        <h2></h2>
+        <table>
+          <h2>Ingresos</h2>
+          <thead>
+            <tr class="">
+              <th>Fecha</th>
+              <th>Descripcion</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </div>
+  </body>
+  <script src="scrips.js"></script>
+</html>
