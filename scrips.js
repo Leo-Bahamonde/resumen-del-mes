@@ -1,87 +1,55 @@
-//variables
+// Variables
 const tablaContainer = document.querySelector(".tabla-container");
+const tbodyIngresos = document.querySelector(".resultado");
+const ingresoSection = document.querySelector(".ingresoSection table");
+let ingresoDescripcion = document.querySelector(".ingresoDescripcion");
+let ingresoImportes = document.querySelector(".ingresoImportes")
 let articulos = [];
 
-//eventos
+// Eventos
 tablaContainer.addEventListener("click", guardarIngresos);
 
 // Funciones
-
 function guardarIngresos(e) {
   if (e.target.classList.contains("btn-guardar")) {
-    const datos = e.target.parentElement.parentElement;
-    leeDatos(datos)
-    
+    const fila = e.target.closest("tr");
+    leeDatos(fila);
   }
 }
 
-function leeDatos(datos) {
+function leeDatos(fila) {
   let ingresos = {
-    ingresoDescripcion: datos.querySelector(".ingresoDescripcion").value,
-    ingresoImportes: datos.querySelector(".ingresoImportes").value,
+    fecha: new Date().toLocaleDateString(),
+    ingresoDescripcion: ingresoDescripcion.value,
+    ingresoImportes: ingresoImportes.value,
   };
-  
-  articulos = [...articulos,ingresos]
-  console.log(articulos);
+
+  articulos = [...articulos, ingresos];
+  mostrarDatos();
+
+    ingresoDescripcion.value = "",
+    ingresoImportes.value = ""
+
 }
 
+function mostrarDatos() {
+  // Limpio el tbody antes de volver a mostrar
+  tbodyIngresos.innerHTML = "";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//variables
-/* const ingresoDescripcion = document.querySelector("#ingresoDescripcion");
-const ingresoImportes = document.querySelector("#ingresoImportes");
-const egresosDescripcion = document.querySelector("#egresoDescripcion");
-const egresosImportes = document.querySelector("#egresoImporte");
-//variables tablas
-const tdIngDescripcion = document.querySelector(".tdIngDescripcion");
-
-
-
-//eventos
-ingresoDescripcion.addEventListener("blur", ingresos);
-ingresoImportes.addEventListener("blur", ingresos);
-
-//funciones
-
-function ingresos(e) {
-  const td = document.createElement("TD");
-  td.textContent = e.target.value;
-  tdIngDescripcion.appendChild(td)
-  
-  
+  // Recorro el array y creo filas nuevas
+  articulos.forEach((item) => {
+    const row = document.createElement("tr");
+    const { fecha, ingresoDescripcion, ingresoImportes } = item;
+    row.innerHTML = `
+    <td>${fecha}</td>
+    <td>${ingresoDescripcion}</td>
+    <td>${ingresoImportes}</td>
+    `;
+    tbodyIngresos.appendChild(row);
+    
+  });
 }
- */
+
+// Agrega al resumen central ingresos
+
+
