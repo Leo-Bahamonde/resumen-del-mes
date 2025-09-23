@@ -1,55 +1,96 @@
 // Variables
-const tablaContainer = document.querySelector(".tabla-container");
-const tbodyIngresos = document.querySelector(".resultado");
+const tbodyIngresos = document.querySelector(".resultadoIngreso");
+const tbodyEgresos = document.querySelector(".resultadoEgreso");
+
 const ingresoSection = document.querySelector(".ingresoSection table");
-let ingresoDescripcion = document.querySelector(".ingresoDescripcion");
-let ingresoImportes = document.querySelector(".ingresoImportes")
-let articulos = [];
+const egresoSection = document.querySelector(".egresoSection");
+
+let descripcionIngresos = document.querySelector(".descripcionIngresos");
+let importesIngresos = document.querySelector(".importesIngresos");
+
+let descripcionEgresos = document.querySelector(".descripcionEgresos");
+let importesEgresos = document.querySelector(".importesEgresos");
+
+let ingresos = [];
+let egresos = [];
 
 // Eventos
-tablaContainer.addEventListener("click", guardarIngresos);
+ingresoSection.addEventListener("click", guardar);
+egresoSection.addEventListener("click", guardarEgresos);
 
 // Funciones
-function guardarIngresos(e) {
-  if (e.target.classList.contains("btn-guardar")) {
+function guardar(e) {
+  if (e.target.classList.contains("btn-guardarIngresos")) {
     const fila = e.target.closest("tr");
     leeDatos(fila);
   }
 }
 
-function leeDatos(fila) {
-  let ingresos = {
+function guardarEgresos(e) {
+  if (e.target.classList.contains("btn-guardarEgresos")) {
+    const fila = e.target.closest("tr");
+    leeDatosEgresos(fila);
+  }
+}
+
+function leeDatosEgresos(fila) {
+  const campos = {
     fecha: new Date().toLocaleDateString(),
-    ingresoDescripcion: ingresoDescripcion.value,
-    ingresoImportes: ingresoImportes.value,
+    descripcionEgresos: fila.querySelector(".descripcionEgresos").value,
+    importesEgresos: fila.querySelector(".importesEgresos").value,
   };
 
-  articulos = [...articulos, ingresos];
+  egresos = [...egresos, campos];
+
+  mostrarDatosEgresos();
+
+  // limpiar inputs de esa fila
+
+  fila.querySelectorAll("input").forEach((input) => (input.value = ""));
+}
+
+function leeDatos() {
+  let campos = {
+    fecha: new Date().toLocaleDateString(),
+    descripcionIngresos: descripcionIngresos.value,
+    importesIngresos: importesIngresos.value,
+  };
+
+  ingresos = [...ingresos, campos];
+
   mostrarDatos();
 
-    ingresoDescripcion.value = "",
-    ingresoImportes.value = ""
-
+  (descripcionIngresos.value = ""), (importesIngresos.value = "");
 }
 
 function mostrarDatos() {
   // Limpio el tbody antes de volver a mostrar
   tbodyIngresos.innerHTML = "";
 
-  // Recorro el array y creo filas nuevas
-  articulos.forEach((item) => {
+  // Recorro el array y creo filas nuevas en ingresos
+  ingresos.forEach((item) => {
     const row = document.createElement("tr");
-    const { fecha, ingresoDescripcion, ingresoImportes } = item;
+    const { fecha, descripcionIngresos, importesIngresos } = item;
     row.innerHTML = `
     <td>${fecha}</td>
-    <td>${ingresoDescripcion}</td>
-    <td>${ingresoImportes}</td>
+    <td>${descripcionIngresos}</td>
+    <td>${importesIngresos}</td>
     `;
     tbodyIngresos.appendChild(row);
-    
   });
 }
 
-// Agrega al resumen central ingresos
+function mostrarDatosEgresos() {
+  tbodyEgresos.innerHTML = "";
+  egresos.forEach((item) => {
+    const row = document.createElement("tr");
+    const { fecha, descripcionEgresos, importesEgresos } = item;
+    row.innerHTML = `
+    <td>${fecha}</td>
+    <td>${descripcionEgresos}</td>
+    <td>${importesEgresos}</td>
+    `;
 
-
+    tbodyEgresos.appendChild(row);
+  });
+}

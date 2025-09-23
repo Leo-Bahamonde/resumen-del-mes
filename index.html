@@ -34,7 +34,7 @@
         </div>
       </section>
 
-      <!-- Tabla Ingresos -->
+      <!-- input Ingresos -->
       <section class="tabla-container ingresoSection ">
         <h2>Ingresos</h2>
         <table>
@@ -44,14 +44,14 @@
                 <input
                   type="text"
                   placeholder="Ej: Sueldo"
-                  class="ingresoDescripcion"
+                  class="descripcionIngresos"
                 />
               </td>
               <td data-label="Importe">
-                <input type="number" placeholder="0" class="ingresoImportes" />
+                <input type="number" placeholder="0" class="importesIngresos" />
               </td>
               <td data-label="Acciones" class="acciones">
-                <button class="btn btn-guardar">Guardar</button>
+                <button class="btn btn-guardar btn-guardarIngresos">Guardar</button>
                 <button class="btn btn-editar">Editar</button>
                 <button class="btn btn-borrar">Borrar</button>
               </td>
@@ -59,26 +59,24 @@
           </tbody>
         </table>
       </section>
-
-      <!-- Tabla Egresos -->
-      <section class="tabla-container">
-        <h2>Egresos</h2>
+       <!-- input egresos -->
+      <section class="tabla-container egresoSection">
+        <h2>EGRESOS</h2>
         <table>
           <tbody>
             <tr>
-              <td data-label="Fecha"><input type="date" /></td>
               <td data-label="Descripción">
                 <input
                   type="text"
-                  placeholder="Ej: Supermercado"
-                  id="egresoDescripcion"
+                  placeholder="Ej: Sueldo"
+                  class="descripcionEgresos"
                 />
               </td>
               <td data-label="Importe">
-                <input type="number" placeholder="0" id="egresoImporte" />
+                <input type="number" placeholder="0" class="importesEgresos" />
               </td>
               <td data-label="Acciones" class="acciones">
-                <button class="btn btn-guardar">Guardar</button>
+                <button class="btn btn-guardar btn-guardarEgresos">Guardar</button>
                 <button class="btn btn-editar">Editar</button>
                 <button class="btn btn-borrar">Borrar</button>
               </td>
@@ -87,6 +85,10 @@
         </table>
       </section>
 
+      
+     
+
+          <!-- tabla ingresos -->
       <section class="tabla-container">
         <table>
           <thead>
@@ -96,7 +98,24 @@
               <th>Importe</th>
             </tr>
           </thead>
-          <tbody class="resultado">
+          <tbody class="resultadoIngreso">
+            <!-- acá se agregarán las filas -->
+          </tbody>
+        </table>
+      </section>
+
+
+        <!-- tabla Egresos -->
+       <section class="tabla-container">
+        <table>
+          <thead>
+            <tr>
+              <th>FECHA</th>
+              <th>Descripción</th>
+              <th>Importe</th>
+            </tr>
+          </thead>
+          <tbody class="resultadoEgreso">
             <!-- acá se agregarán las filas -->
           </tbody>
         </table>
