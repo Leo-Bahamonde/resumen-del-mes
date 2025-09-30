@@ -1,4 +1,13 @@
 // Variables
+
+//boton bloqueado egresos
+const inputDescripcion = document.querySelector('.inputDescripcion');
+const inputImportes = document.querySelector('.inputImportes');
+const btnGuardar = document.querySelector('.btnGuardar');
+
+
+
+
 const tbodyIngresos = document.querySelector(".resultadoIngreso");
 const tbodyEgresos = document.querySelector(".resultadoEgreso");
 
@@ -11,12 +20,37 @@ let importesIngresos = document.querySelector(".importesIngresos");
 let descripcionEgresos = document.querySelector(".descripcionEgresos");
 let importesEgresos = document.querySelector(".importesEgresos");
 
+const btnGuardarEgresos = document.querySelector('.btn-guardarEgresos');
+const btnGuardarIngresos = document.querySelector('.btn btn-guardarIngresos');
+
 let ingresos = [];
 let egresos = [];
 
 // Eventos
 ingresoSection.addEventListener("click", guardar);
 egresoSection.addEventListener("click", guardarEgresos);
+
+inputDescripcion.addEventListener('input',validar);
+inputImportes.addEventListener('input',validar);
+
+
+//eventos de validaciones
+
+
+
+function validar(){
+  if (inputDescripcion.value.trim() !== "" && inputImportes.value.trim() !== ""){
+    btnGuardar.disabled = false
+    btnGuardar.classList.add('btn-enabled')
+    btnGuardar.classList.remove('btn-disabled') 
+  }
+  else{
+    btnGuardar.disabled = true
+    btnGuardar.classList.remove('btn-enabled')
+    btnGuardar.classList.add('btn-disabled') ;
+  }
+
+}
 
 // Funciones
 function guardar(e) {
@@ -27,9 +61,10 @@ function guardar(e) {
 }
 
 function guardarEgresos(e) {
+
   if (e.target.classList.contains("btn-guardarEgresos")) {
     const fila = e.target.closest("tr");
-    leeDatosEgresos(fila);
+    leeDatosEgresos(fila); 
   }
 }
 
@@ -45,11 +80,14 @@ function leeDatosEgresos(fila) {
   mostrarDatosEgresos();
 
   // limpiar inputs de esa fila
-
   fila.querySelectorAll("input").forEach((input) => (input.value = ""));
+
+  //bloquea el boton de guardado
+  validar()
 }
 
 function leeDatos() {
+  
   let campos = {
     fecha: new Date().toLocaleDateString(),
     descripcionIngresos: descripcionIngresos.value,
@@ -59,7 +97,8 @@ function leeDatos() {
   ingresos = [...ingresos, campos];
 
   mostrarDatos();
-
+  
+  
   (descripcionIngresos.value = ""), (importesIngresos.value = "");
 }
 
@@ -94,3 +133,5 @@ function mostrarDatosEgresos() {
     tbodyEgresos.appendChild(row);
   });
 }
+
+

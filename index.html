@@ -35,7 +35,8 @@
       </section>
 
       <!-- input Ingresos -->
-      <section class="tabla-container ingresoSection ">
+       <div class="validacion" >
+        <section class="tabla-container ingresoSection ">
         <h2>Ingresos</h2>
         <table>
           <tbody>
@@ -51,7 +52,7 @@
                 <input type="number" placeholder="0" class="importesIngresos" />
               </td>
               <td data-label="Acciones" class="acciones">
-                <button class="btn btn-guardar btn-guardarIngresos">Guardar</button>
+                <button class="btn btn-guardarIngresos btn-disabled">Guardar</button>
                 <button class="btn btn-editar">Editar</button>
                 <button class="btn btn-borrar">Borrar</button>
               </td>
@@ -69,14 +70,14 @@
                 <input
                   type="text"
                   placeholder="Ej: Sueldo"
-                  class="descripcionEgresos"
+                  class="descripcionEgresos inputDescripcion"
                 />
               </td>
               <td data-label="Importe">
-                <input type="number" placeholder="0" class="importesEgresos" />
+                <input type="number" placeholder="0" class="importesEgresos inputImportes" />
               </td>
               <td data-label="Acciones" class="acciones">
-                <button class="btn btn-guardar btn-guardarEgresos">Guardar</button>
+                <button class="btn btn-guardarEgresos btn-disabled btnGuardar">Guardar</button>
                 <button class="btn btn-editar">Editar</button>
                 <button class="btn btn-borrar">Borrar</button>
               </td>
@@ -84,6 +85,9 @@
           </tbody>
         </table>
       </section>
+
+       </div>
+      
 
       
      

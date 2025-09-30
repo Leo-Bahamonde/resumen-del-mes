@@ -90,7 +90,7 @@ th {
   background-color: #00ff59;
 }
 .resultadoIngreso tr:hover {
-  background-color: #00aa3b;
+  background-color: #0000;
 }
 
 /* Egresos */
@@ -122,8 +122,7 @@ th {
   flex: 1;
 }
 
-.btn-guardar { background: #10b981; color: white; }
-.btn-guardar:hover { background: #059669; }
+.btn-guardar { background: #878787; color: white; }
 
 .btn-editar { background: #3b82f6; color: white; }
 .btn-editar:hover { background: #2563eb; }
@@ -173,4 +172,22 @@ input[type="number"] {
   .acciones {
     justify-content: flex-start;
   }
+}
+
+.error{
+  color: white;
+  background: red;
+  text-align: center;
+  
+}
+ /* botones guardar */
+.btn-disabled {
+  background: #878787; /* gris */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-enabled {
+  background: #10b981; /* verde */
+  cursor: pointer;
 }
