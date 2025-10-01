@@ -5,8 +5,10 @@ const inputDescripcion = document.querySelector('.inputDescripcion');
 const inputImportes = document.querySelector('.inputImportes');
 const btnGuardar = document.querySelector('.btnGuardar');
 
-
-
+//boton bloqueado ingresos
+const inputDesIngreso = document.querySelector('.input-des-ingreso');
+const inputImporteIngreso = document.querySelector('.input-importe-ingreso');
+const btnIngreso = document.querySelector('.btn-ingresos');
 
 const tbodyIngresos = document.querySelector(".resultadoIngreso");
 const tbodyEgresos = document.querySelector(".resultadoEgreso");
@@ -36,8 +38,6 @@ inputImportes.addEventListener('input',validar);
 
 //eventos de validaciones
 
-
-
 function validar(){
   if (inputDescripcion.value.trim() !== "" && inputImportes.value.trim() !== ""){
     btnGuardar.disabled = false
@@ -50,6 +50,26 @@ function validar(){
     btnGuardar.classList.add('btn-disabled') ;
   }
 
+}
+
+// bloquear boton ingreso
+
+inputDesIngreso.addEventListener('input',validarIngreso)
+inputImporteIngreso.addEventListener('input',validarIngreso)
+
+
+function validarIngreso(){
+  if (inputDesIngreso.value.trim() !== "" && inputImporteIngreso.value.trim() !== "") {
+    btnIngreso.disabled = false;
+    btnIngreso.classList.remove("btn-disabled");
+    btnIngreso.classList.add('btn-enabled');  
+  }
+  else{
+    btnIngreso.disabled = true;
+    btnIngreso.classList.remove('btn-enabled');  
+    btnIngreso.classList.add("btn-disabled");
+  
+  }
 }
 
 // Funciones
@@ -76,14 +96,15 @@ function leeDatosEgresos(fila) {
   };
 
   egresos = [...egresos, campos];
-
   mostrarDatosEgresos();
 
   // limpiar inputs de esa fila
-  fila.querySelectorAll("input").forEach((input) => (input.value = ""));
+
+  (descripcionEgresos.value = ""), (importesEgresos.value = "");
 
   //bloquea el boton de guardado
   validar()
+  
 }
 
 function leeDatos() {
@@ -95,11 +116,13 @@ function leeDatos() {
   };
 
   ingresos = [...ingresos, campos];
-
   mostrarDatos();
+
   
   
   (descripcionIngresos.value = ""), (importesIngresos.value = "");
+  //bloquea el btn guardado
+  validarIngreso()
 }
 
 function mostrarDatos() {
@@ -133,5 +156,3 @@ function mostrarDatosEgresos() {
     tbodyEgresos.appendChild(row);
   });
 }
-
-

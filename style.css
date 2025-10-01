@@ -122,7 +122,7 @@ th {
   flex: 1;
 }
 
-.btn-guardar { background: #878787; color: white; }
+/* .btn-guardar { background: #878787; color: white; } */
 
 .btn-editar { background: #3b82f6; color: white; }
 .btn-editar:hover { background: #2563eb; }
@@ -183,11 +183,13 @@ input[type="number"] {
  /* botones guardar */
 .btn-disabled {
   background: #878787; /* gris */
+  color: #0000;
   cursor: not-allowed;
   opacity: 0.7;
 }
 
 .btn-enabled {
   background: #10b981; /* verde */
+  color: #fafafa;
   cursor: pointer;
 }
