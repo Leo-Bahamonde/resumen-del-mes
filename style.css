@@ -120,6 +120,7 @@ th {
   font-size: 0.85rem;
   transition: background 0.2s;
   flex: 1;
+  margin: 3px;
 }
 
 /* .btn-guardar { background: #878787; color: white; } */
@@ -136,7 +137,7 @@ input[type="text"],
 input[type="number"] {
   width: 100%;
   padding: 6px;
-  border: 1px solid #d1d5db;
+  border: 2px solid #d1d5db;
   border-radius: 6px;
   font-size: 0.9rem;
 }
