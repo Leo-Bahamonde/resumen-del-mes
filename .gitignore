@@ -1,0 +1,4 @@
+node_modules/
+finanzas.db
+.env
+.DS_Store
