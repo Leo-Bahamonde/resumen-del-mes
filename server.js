@@ -162,6 +162,16 @@ app.delete('/api/transacciones/:id', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+// Exportar app para Vercel
+module.exports = app;
+
+// Solo escuchar si se ejecuta directamente (no en Vercel)
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Servidor corriendo en http://localhost:${port}`);
+    });
+}
