@@ -4,7 +4,8 @@ const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const isProduction = !!process.env.DATABASE_URL;
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const isProduction = !!connectionString;
 
 // Middleware
 app.use(cors());
@@ -18,11 +19,11 @@ let dbType = isProduction ? 'pg' : 'sqlite';
 console.log(`Iniciando en modo: ${isProduction ? 'PRODUCCIÓN (PostgreSQL)' : 'LOCAL (SQLite)'}`);
 
 if (isProduction) {
-    // --- POSTGRESQL (Heroku) ---
+    // --- POSTGRESQL (Heroku / Vercel) ---
     const { Pool } = require('pg');
     db = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false } // Requerido por Heroku
+        connectionString: connectionString,
+        ssl: { rejectUnauthorized: false } // Requerido por algunos proveedores cloud
     });
 
     // Inicializar Tabla PG
