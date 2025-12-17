@@ -1,5 +1,5 @@
 // === Configuracion API ===
-const API_URL = 'http://localhost:3000/api/transacciones';
+const API_URL = '/api/transacciones';
 
 // === Variables Globales ===
 let ingresos = [];
