@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const connectionString = process.env.FINANZAS_URL || process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.STORAGE_URL;
 const isProduction = !!connectionString;
 
 // Middleware
