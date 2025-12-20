@@ -1,23 +1,22 @@
 {
-  "name": "resumen-mensual-backend",
+  "name": "resumen-mensual",
   "version": "1.0.0",
-  "description": "Backend para control de finanzas con MySQL",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
-  },
-  "keywords": [],
+  "description": "Control de finanzas mensual con backend en Vercel",
+  "keywords": [
+    "finanzas",
+    "presupuesto",
+    "control-mensual"
+  ],
   "author": "",
   "license": "ISC",
-  "engines": {
-    "node": "20.x"
-  },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "pg": "^8.16.3",
-    "sqlite3": "^5.1.7"
+    "@vercel/postgres": "^0.10.0"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
   }
 }

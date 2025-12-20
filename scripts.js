@@ -1,9 +1,10 @@
-// === Configuracion API ===
+// === CONFIGURACIÓN API ===
 const API_URL = '/api/transacciones';
 
 // === Variables Globales ===
 let ingresos = [];
 let egresos = [];
+let isLoading = false;
 
 // === Selectores ===
 // Ingresos
@@ -43,29 +44,127 @@ btnAgregarEgreso.addEventListener("click", () => agregarTransaccion('egreso'));
 tbodyIngresos.addEventListener("click", (e) => manejarClickTabla(e));
 tbodyEgresos.addEventListener("click", (e) => manejarClickTabla(e));
 
-// === Funciones Lógica ===
+// === Funciones API ===
 
 async function cargarDatos() {
   try {
+    setLoading(true);
     const response = await fetch(API_URL);
-    if (!response.ok) throw new Error('Error al cargar datos');
-    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error(result.error || 'Error al cargar datos');
+    }
+    
+    const todasTransacciones = result.data || [];
     
     // Separar por tipo
-    ingresos = data.filter(t => t.tipo === 'ingreso');
-    egresos = data.filter(t => t.tipo === 'egreso');
+    ingresos = todasTransacciones.filter(t => t.tipo === 'ingreso');
+    egresos = todasTransacciones.filter(t => t.tipo === 'egreso');
 
     renderizarIngresos();
     renderizarEgresos();
     actualizarTotales();
   } catch (error) {
-    console.error(error);
-    alert('Error conectando con el servidor. Asegúrate de que npm start esté corriendo.');
+    console.error('Error cargando datos:', error);
+    mostrarError('No se pudieron cargar los datos. Por favor, recarga la página.');
+    ingresos = [];
+    egresos = [];
+  } finally {
+    setLoading(false);
   }
 }
 
+async function guardarTransaccion(transaccion) {
+  try {
+    setLoading(true);
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(transaccion)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error(result.error || 'Error al guardar');
+    }
+    
+    return result.data;
+  } catch (error) {
+    console.error('Error guardando transacción:', error);
+    mostrarError('No se pudo guardar la transacción. Intenta nuevamente.');
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function eliminarTransaccion(id) {
+  try {
+    setLoading(true);
+    const response = await fetch(`${API_URL}?id=${id}`, {
+      method: 'DELETE'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error(result.error || 'Error al eliminar');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error eliminando transacción:', error);
+    mostrarError('No se pudo eliminar la transacción. Intenta nuevamente.');
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+}
+
+// === Funciones de UI ===
+
+function setLoading(loading) {
+  isLoading = loading;
+  
+  // Deshabilitar botones durante carga
+  btnAgregarIngreso.disabled = loading || !validarCampos(inputDescIngreso, inputMontoIngreso);
+  btnAgregarEgreso.disabled = loading || !validarCampos(inputDescEgreso, inputMontoEgreso);
+  
+  // Agregar clase de loading si es necesario
+  if (loading) {
+    document.body.style.cursor = 'wait';
+  } else {
+    document.body.style.cursor = 'default';
+  }
+}
+
+function mostrarError(mensaje) {
+  alert(mensaje); // Simple por ahora, puedes mejorar con un toast/notification
+}
+
+function validarCampos(inputDesc, inputMonto) {
+  return inputDesc.value.trim() !== "" && inputMonto.value.trim() !== "";
+}
+
 function validarBoton(inputDesc, inputMonto, btn) {
-  if (inputDesc.value.trim() !== "" && inputMonto.value.trim() !== "") {
+  if (validarCampos(inputDesc, inputMonto) && !isLoading) {
     btn.disabled = false; // Habilitar
     btn.classList.remove("btn-disabled");
   } else {
@@ -75,59 +174,68 @@ function validarBoton(inputDesc, inputMonto, btn) {
 }
 
 async function agregarTransaccion(tipo) {
+  if (isLoading) return;
+  
   const esIngreso = tipo === 'ingreso';
   const descInput = esIngreso ? inputDescIngreso : inputDescEgreso;
   const montoInput = esIngreso ? inputMontoIngreso : inputMontoEgreso;
   
   const nuevaTransaccion = {
-    descripcion: descInput.value,
+    fecha: new Date().toISOString().split('T')[0],
+    descripcion: descInput.value.trim(),
     monto: parseFloat(montoInput.value),
     tipo: tipo
   };
 
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(nuevaTransaccion)
-    });
+    // Guardar en la base de datos
+    const transaccionGuardada = await guardarTransaccion(nuevaTransaccion);
+    
+    // Agregar a la lista correspondiente con el ID del servidor
+    if (esIngreso) {
+      ingresos.push(transaccionGuardada);
+    } else {
+      egresos.push(transaccionGuardada);
+    }
 
-    if (!response.ok) throw new Error('Error al guardar');
-    
-    // Recargar todo para asegurar sincronización (o podríamos agregar manual a la lista local)
-    await cargarDatos();
-    
+    // Renderizar y actualizar
+    if (esIngreso) {
+      renderizarIngresos();
+    } else {
+      renderizarEgresos();
+    }
+    actualizarTotales();
+
     // Limpiar y resetear validación
     descInput.value = "";
     montoInput.value = "";
     validarBoton(descInput, montoInput, esIngreso ? btnAgregarIngreso : btnAgregarEgreso);
-
   } catch (error) {
-    console.error(error);
-    alert('No se pudo guardar la transacción.');
+    // El error ya fue manejado en guardarTransaccion
   }
 }
 
 async function manejarClickTabla(e) {
   if (e.target.closest(".btn-borrar")) {
     const btn = e.target.closest(".btn-borrar");
-    const id = btn.dataset.id; // ID viene de la BD
+    const id = parseInt(btn.dataset.id);
     
     if (confirm('¿Estás seguro de eliminar este registro?')) {
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
-            });
+      try {
+        // Eliminar de la base de datos
+        await eliminarTransaccion(id);
+        
+        // Eliminar de las listas locales
+        ingresos = ingresos.filter(t => t.id !== id);
+        egresos = egresos.filter(t => t.id !== id);
 
-            if (!response.ok) throw new Error('Error al eliminar');
-            
-            await cargarDatos();
-        } catch (error) {
-            console.error(error);
-            alert('No se pudo eliminar el registro.');
-        }
+        // Renderizar
+        renderizarIngresos();
+        renderizarEgresos();
+        actualizarTotales();
+      } catch (error) {
+        // El error ya fue manejado en eliminarTransaccion
+      }
     }
   }
 }
@@ -136,11 +244,20 @@ async function manejarClickTabla(e) {
 
 function renderizarIngresos() {
   tbodyIngresos.innerHTML = "";
-  // Ya vienen ordenados del backend ("ORDER BY fecha DESC, id DESC")
-  ingresos.forEach(item => {
+  
+  if (ingresos.length === 0) {
     const row = document.createElement("tr");
-    // Formatear fecha que viene de SQL (ej: 2024-05-10T...)
-    const fecha = new Date(item.fecha).toLocaleDateString();
+    row.innerHTML = `<td colspan="4" style="text-align: center; color: #666;">No hay ingresos registrados</td>`;
+    tbodyIngresos.appendChild(row);
+    return;
+  }
+  
+  // Ordenar por fecha descendente
+  const ingresosOrdenados = [...ingresos].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  
+  ingresosOrdenados.forEach(item => {
+    const row = document.createElement("tr");
+    const fecha = new Date(item.fecha + 'T00:00:00').toLocaleDateString('es-AR');
     
     row.innerHTML = `
       <td>${fecha}</td>
@@ -156,9 +273,20 @@ function renderizarIngresos() {
 
 function renderizarEgresos() {
   tbodyEgresos.innerHTML = "";
-  egresos.forEach(item => {
+  
+  if (egresos.length === 0) {
     const row = document.createElement("tr");
-    const fecha = new Date(item.fecha).toLocaleDateString();
+    row.innerHTML = `<td colspan="4" style="text-align: center; color: #666;">No hay egresos registrados</td>`;
+    tbodyEgresos.appendChild(row);
+    return;
+  }
+  
+  // Ordenar por fecha descendente
+  const egresosOrdenados = [...egresos].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  
+  egresosOrdenados.forEach(item => {
+    const row = document.createElement("tr");
+    const fecha = new Date(item.fecha + 'T00:00:00').toLocaleDateString('es-AR');
 
     row.innerHTML = `
       <td>${fecha}</td>
@@ -185,7 +313,6 @@ function actualizarTotales() {
 }
 
 function formatoMoneda(valor) {
-  // Asegurarse que es número
   const numero = Number(valor);
   return numero.toLocaleString("es-AR", {
     style: "currency",
@@ -195,7 +322,7 @@ function formatoMoneda(valor) {
   });
 }
 
-// Función auxiliar para inicializar validaciones al cargar si hay texto
+// Función auxiliar para inicializar validaciones al cargar
 function validarInputs() {
   validarBoton(inputDescIngreso, inputMontoIngreso, btnAgregarIngreso);
   validarBoton(inputDescEgreso, inputMontoEgreso, btnAgregarEgreso);
